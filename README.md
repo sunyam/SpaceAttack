@@ -8,3 +8,4 @@ Parameters to tweak:
 No. of lives
 Minimum no. of rocks before another one is spawned
 
+Note: It is compatible with the online Python IDE- codeskulptor.org which has a simplegui module; Alternate module- simpleguitk
