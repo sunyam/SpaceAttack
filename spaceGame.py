@@ -203,7 +203,27 @@ class Sprite:
             return False
         else:
             return True
-    
+            
+# key handlers to control ship   
+def keydown(key):
+    if key == simplegui.KEY_MAP['left']:
+        my_ship.decrement_angle_vel()
+    elif key == simplegui.KEY_MAP['right']:
+        my_ship.increment_angle_vel()
+    elif key == simplegui.KEY_MAP['up']:
+        my_ship.set_thrust(True)
+    elif key == simplegui.KEY_MAP['space']:
+        my_ship.shoot()
+        
+def keyup(key):
+    if key == simplegui.KEY_MAP['left']:
+        my_ship.increment_angle_vel()
+    elif key == simplegui.KEY_MAP['right']:
+        my_ship.decrement_angle_vel()
+    elif key == simplegui.KEY_MAP['up']:
+        my_ship.set_thrust(False)
+        
+
 
 
 
