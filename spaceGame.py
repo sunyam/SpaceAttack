@@ -223,6 +223,71 @@ def keyup(key):
     elif key == simplegui.KEY_MAP['up']:
         my_ship.set_thrust(False)
         
+# mouseclick handlers that reset UI and conditions whether splash image is drawn
+def click(pos):
+    global started
+    center = [WIDTH / 2, HEIGHT / 2]
+    size = splash_info.get_size()
+    inwidth = (center[0] - size[0] / 2) < pos[0] < (center[0] + size[0] / 2)
+    inheight = (center[1] - size[1] / 2) < pos[1] < (center[1] + size[1] / 2)
+    if (not started) and inwidth and inheight:
+        started = True
+
+def draw(canvas):
+    global time, started, lives, score, rock_group, missile_group, flag 
+    
+    # restart
+    if lives == 0:
+        started = False
+        rock_group = set([])
+        missile_group = set([])
+        lives = 3
+        score = 0
+        flag = 1
+        soundtrack.rewind()
+        soundtrack.play()
+        
+    # animiate background
+    time += 1
+    wtime = (time / 4) % WIDTH
+    center = debris_info.get_center()
+    size = debris_info.get_size()
+    canvas.draw_image(nebula_image, nebula_info.get_center(), nebula_info.get_size(), [WIDTH / 2, HEIGHT / 2], [WIDTH, HEIGHT])
+    canvas.draw_image(debris_image, center, size, (wtime - WIDTH / 2, HEIGHT / 2), (WIDTH, HEIGHT))
+    canvas.draw_image(debris_image, center, size, (wtime + WIDTH / 2, HEIGHT / 2), (WIDTH, HEIGHT))
+
+    # draw UI
+    canvas.draw_text("Lives", [50, 50], 22, "White")
+    canvas.draw_text("Score", [680, 50], 22, "White")
+    canvas.draw_text(str(lives), [50, 80], 22, "White")
+    canvas.draw_text(str(score), [680, 80], 22, "White")
+    
+    # checking collision b/w ship and rocks
+    if group_collide(my_ship, rock_group):
+        lives -= 1
+    
+    # checking collision b/w rocks and missiles
+    score += group_group_collide(rock_group, missile_group)
+    
+    # draw ship and sprites
+    my_ship.draw(canvas)
+    
+    if started:
+        process_sprite_group(rock_group, canvas)
+        process_sprite_group(missile_group, canvas)
+        process_sprite_group(rock_group, canvas)
+        process_sprite_group(missile_group, canvas)
+
+    # update ship and sprites
+    my_ship.update()
+    
+    # draw splash screen if not started
+    if not started:
+        canvas.draw_image(splash_image, splash_info.get_center(), 
+                          splash_info.get_size(), [WIDTH / 2, HEIGHT / 2], 
+                          splash_info.get_size())
+
+
 
 
 
