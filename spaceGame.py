@@ -287,6 +287,32 @@ def draw(canvas):
                           splash_info.get_size(), [WIDTH / 2, HEIGHT / 2], 
                           splash_info.get_size())
 
+# helper function to draw rocks
+def process_sprite_group(a_set, canvas):
+    for element in list(a_set):
+        element.draw(canvas)
+        if element.update():
+            a_set.remove(element)
+        
+# helper fucntion for collision
+def group_collide(other_object, group):
+    flag = False
+    for element in list(group):
+        if element.collide(other_object):
+            group.remove(element)
+            flag = True
+            
+    return flag    
+
+# helper2 function for collision
+def group_group_collide(group1, group2):
+    count = 0
+    for el1 in list(group1):
+        if group_collide(el1, group2):
+            group1.discard(el1)
+            count += 1
+    
+    return count
 
 
 
