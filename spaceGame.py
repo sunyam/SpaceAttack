@@ -314,7 +314,36 @@ def group_group_collide(group1, group2):
     
     return count
 
+# timer handler that spawns a rock    
+def rock_spawner():
+    global rock_group, started
+    if started:    
+        rock_pos = [random.randrange(0, WIDTH), random.randrange(0, HEIGHT)]
+        rock_vel = [random.random() * .6 - .3, random.random() * .6 - .3]
+        rock_avel = random.random() * .2 - .1
+        a_rock = Sprite(rock_pos, rock_vel, 0, rock_avel, asteroid_image, asteroid_info)
+        
+        if len(rock_group)<12:
+            rock_group.add(a_rock)
+    
+# initialize stuff
+frame = simplegui.create_frame("Asteroids", WIDTH, HEIGHT)
+
+soundtrack.play()
 
 
+# initialize ship and two sprites
+my_ship = Ship([WIDTH / 2, HEIGHT / 2], [0, 0], 0, ship_image, ship_info)
 
 
+# register handlers
+frame.set_keyup_handler(keyup)
+frame.set_keydown_handler(keydown)
+frame.set_mouseclick_handler(click)
+frame.set_draw_handler(draw)
+
+timer = simplegui.create_timer(1000.0, rock_spawner)
+
+# get things rolling
+timer.start()
+frame.start()
